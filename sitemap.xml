@@ -19,6 +19,12 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/concepts/context/"/>
     </url>
     <url>
+        <loc>https://emp-agents.empyrealsdk.com/concepts/rationale/</loc>
+        <lastmod>2024-11-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/concepts/rationale/"/>
+    </url>
+    <url>
         <loc>https://emp-agents.empyrealsdk.com/concepts/tools/</loc>
         <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
@@ -65,12 +71,6 @@
         <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/getting-started/tools/"/>
-    </url>
-    <url>
-        <loc>https://emp-agents.empyrealsdk.com/purpose/rationale/</loc>
-        <lastmod>2024-11-25</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/purpose/rationale/"/>
     </url>
     <url>
         <loc>https://emp-agents.empyrealsdk.com/skills/</loc>
