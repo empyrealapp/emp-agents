@@ -10,6 +10,7 @@ search:
     - [Summarize](getting-started/summarize.md)
     - [Using Tools](getting-started/tools.md)
     - [Skills](getting-started/skills.md)
+    - [Implicits](getting-started/implicits.md)
     - [Config](getting-started/config.md)
 - [Skills](skills/index.md)
     - [Twitter](skills/twitter.md)

@@ -1,6 +1,6 @@
 from typing import Any, Callable, ParamSpec, TypeVar
 
-from fast_depends import Depends, inject
+from fast_depends import Depends, Provider, inject
 
 from .manager import ImplicitManager
 from .models import IgnoreDepends as IgnoreDependsModel
@@ -34,6 +34,7 @@ __all__ = [
     "Depends",
     "ImplicitManager",
     "IgnoreDepends",
+    "Provider",
     "inject",
     "set_implicit",
 ]

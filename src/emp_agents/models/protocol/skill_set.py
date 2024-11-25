@@ -26,3 +26,6 @@ class SkillSet(BaseModel):
 
         cls._tools = list(cls._tools_map.values())
         ToolRegistry.register_class(cls)
+
+    def __iter__(self):
+        return iter(self._tools)
