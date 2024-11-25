@@ -2,79 +2,109 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
         <loc>https://emp-agents.empyrealsdk.com/SUMMARY/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/SUMMARY/"/>
     </url>
     <url>
         <loc>https://emp-agents.empyrealsdk.com/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/"/>
     </url>
     <url>
+        <loc>https://emp-agents.empyrealsdk.com/concepts/context/</loc>
+        <lastmod>2024-11-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/concepts/context/"/>
+    </url>
+    <url>
+        <loc>https://emp-agents.empyrealsdk.com/concepts/tools/</loc>
+        <lastmod>2024-11-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/concepts/tools/"/>
+    </url>
+    <url>
         <loc>https://emp-agents.empyrealsdk.com/getting-started/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/getting-started/"/>
     </url>
     <url>
         <loc>https://emp-agents.empyrealsdk.com/getting-started/config/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/getting-started/config/"/>
     </url>
     <url>
+        <loc>https://emp-agents.empyrealsdk.com/getting-started/conversation/</loc>
+        <lastmod>2024-11-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/getting-started/conversation/"/>
+    </url>
+    <url>
+        <loc>https://emp-agents.empyrealsdk.com/getting-started/model/</loc>
+        <lastmod>2024-11-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/getting-started/model/"/>
+    </url>
+    <url>
         <loc>https://emp-agents.empyrealsdk.com/getting-started/skills/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/getting-started/skills/"/>
     </url>
     <url>
+        <loc>https://emp-agents.empyrealsdk.com/getting-started/summarize/</loc>
+        <lastmod>2024-11-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/getting-started/summarize/"/>
+    </url>
+    <url>
         <loc>https://emp-agents.empyrealsdk.com/getting-started/tools/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/getting-started/tools/"/>
     </url>
     <url>
         <loc>https://emp-agents.empyrealsdk.com/purpose/rationale/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/purpose/rationale/"/>
     </url>
     <url>
         <loc>https://emp-agents.empyrealsdk.com/skills/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/skills/"/>
     </url>
     <url>
         <loc>https://emp-agents.empyrealsdk.com/skills/basic_wallet/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/skills/basic_wallet/"/>
     </url>
     <url>
         <loc>https://emp-agents.empyrealsdk.com/skills/dexscreener/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/skills/dexscreener/"/>
     </url>
     <url>
         <loc>https://emp-agents.empyrealsdk.com/skills/simulacrum/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/skills/simulacrum/"/>
     </url>
     <url>
         <loc>https://emp-agents.empyrealsdk.com/skills/twitter/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/skills/twitter/"/>
     </url>
     <url>
         <loc>https://emp-agents.empyrealsdk.com/skills/uniswap/</loc>
-        <lastmod>2024-11-24</lastmod>
+        <lastmod>2024-11-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://emp-agents.empyrealsdk.com/skills/uniswap/"/>
     </url>
