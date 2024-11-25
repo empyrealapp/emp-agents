@@ -23,14 +23,15 @@ classifiers = [
 keywords = ["emp", "agents", "python"]
 
 dependencies = [
+    "aiohttp==3.10.5",
     "anthropic==0.34.0",
+    "cryptography==43.0.3",
+    "eth-rpc-py",
+    "eth-typeshed-py",
+    "fast-depends>=2.4.0",
     "httpx==0.27.2",
     "pydantic==2.9.2",
     "tiktoken==0.7.0",
-    "eth-rpc-py",
-    "eth-typeshed-py",
-    "aiohttp==3.10.5",
-    "cryptography==43.0.3",
 ]
 
 [project.optional-dependencies]

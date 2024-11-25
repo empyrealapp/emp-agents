@@ -15,7 +15,7 @@ class DexScreenerSkill(SkillSet):
     @tool_method
     @staticmethod
     async def search_pairs(
-        query: Annotated[str, Doc("The search query to find trading pairs")]
+        query: Annotated[str, Doc("The search query to find trading pairs")],
     ) -> str:
         """Search for pairs matching query (rate-limit 300 requests per minute)"""
         return await DexScreenerApi.search_pairs(query)

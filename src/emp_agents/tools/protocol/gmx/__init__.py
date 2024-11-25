@@ -3,6 +3,7 @@ from typing import Annotated, Literal
 import httpx
 from typing_extensions import Doc
 
+from emp_agents.logger import logger
 from emp_agents.models.protocol import SkillSet, view_action
 
 
@@ -34,7 +35,7 @@ class GmxSkill(SkillSet):
                 # Parse the JSON response
                 token_infos = response.json()["tokens"]
             else:
-                print(f"Error: {response.status_code}")
+                logger.error(f"Error: {response.status_code}")
         except Exception as e:
             print(f"Error: {e}")
 

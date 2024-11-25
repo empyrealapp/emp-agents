@@ -12,7 +12,10 @@ from typing import (
     get_origin,
 )
 
+from fast_depends.dependencies.model import Depends
 from pydantic import BaseModel
+
+from emp_agents.implicits.models import IgnoreDepends
 
 from .types import Doc, FunctionSchema
 from .utils import unwrap_doc
@@ -133,6 +136,11 @@ def get_function_schema(  # noqa: C901
         if param.default is not inspect._empty:
             default_value = param.default
 
+        if default_value is not inspect._empty and isinstance(
+            default_value, IgnoreDepends
+        ):
+            continue
+
         schema["properties"][name] = {
             "type": guess_type(T),
             "description": description,
@@ -156,7 +164,10 @@ def get_function_schema(  # noqa: C901
         if enum_ is not None:
             schema["properties"][name]["enum"] = [t for t in enum_ if t is not None]
 
-        if default_value is not inspect._empty:
+        if default_value is not inspect._empty and not isinstance(
+            default_value,
+            Depends,
+        ):
             schema["properties"][name]["default"] = default_value
 
         try:
@@ -191,7 +202,6 @@ def guess_type(  # noqa: C901
     Doc("str | list of str that representing JSON schema type"),
 ]:
     """Guesses the JSON schema type for the given python type."""
-
     if isclass(T) and issubclass(T, BaseModel):
         return "object"
 

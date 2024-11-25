@@ -7,6 +7,8 @@ import tweepy
 from tweepy.asynchronous import AsyncClient
 from typing_extensions import Doc
 
+from emp_agents.logger import logger
+
 
 def _get_env():
     api_key, api_key_secret, access_token, access_token_secret, bearer_token = (
@@ -151,7 +153,7 @@ async def reply_to_tweet(
             in_reply_to_tweet_id=tweet_id,
         )
     except Exception as e:
-        print(e)
+        logger.error(f"Error submitting tweet: {e}")
         return "error submitting tweet"
 
     tweet_id = tweet.data["id"]

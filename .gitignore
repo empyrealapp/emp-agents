@@ -162,6 +162,6 @@ cython_debug/
 #.idea/
 
 # scratch space
-scratch.py
+scratch*
 
 docs/site

@@ -35,6 +35,4 @@ class AnthropicBase(BaseModel, TCompletionAgent[Response]):
         try:
             return Response(**message.model_dump())
         except Exception as e:
-            print(message.model_dump())
-            print(e)
             raise e

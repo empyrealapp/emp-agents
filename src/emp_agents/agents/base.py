@@ -6,6 +6,7 @@ from typing import Any, Callable
 from pydantic import BaseModel, Field, PrivateAttr, computed_field, field_validator
 
 from emp_agents.exceptions import InvalidModelException
+from emp_agents.logger import logger
 from emp_agents.models import AnthropicBase, GenericTool, Message, OpenAIBase, Request
 from emp_agents.types import AnthropicModelType, OpenAIModelType, Role
 from emp_agents.utils import count_tokens, execute_tool, summarize_conversation
@@ -271,8 +272,7 @@ class AgentBase(BaseModel):
                             tool_call.id if isinstance(model, OpenAIModelType) else None
                         ),
                     )
-                    if verbose:
-                        print(message)
+                    logger.info(message)
                     self.conversation_history += [message]
                 continue
             else:
@@ -345,7 +345,6 @@ class AgentBase(BaseModel):
             conversation += [Message(role=Role.user, content=question)]
             response = await self.answer(question)
             conversation += [Message(role=Role.assistant, content=response)]
-            print(response)
 
     def _add_tool(self, tool: GenericTool) -> None:
         self._tools.append(tool)
