@@ -5,6 +5,7 @@ from eth_rpc import set_alchemy_key
 
 from emp_agents.agents.skills import SkillsAgent
 from emp_agents.logger import make_verbose
+from emp_agents.tools.protocol.camelot import CamelotSkill
 from emp_agents.tools.protocol.erc20 import ERC20Skill
 from emp_agents.tools.protocol.gmx import GmxSkill
 from emp_agents.tools.protocol.network import NetworkSkill
@@ -25,6 +26,7 @@ class ERC20Agent(SkillsAgent):
 
 agent = ERC20Agent(
     skills=[
+        CamelotSkill,
         ERC20Skill,
         NetworkSkill,
         SimpleWalletSkill,
