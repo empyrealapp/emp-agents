@@ -50,7 +50,7 @@ async def summarize_conversation(
     prompt: str | None = None,
     max_tokens: int = 500,
 ) -> "Message":
-    from emp_agents.models import Message, Request
+    from emp_agents.models import AssistantMessage, Request, SystemMessage, UserMessage
 
     summary_prompt = prompt or DEFAULT_SUMMARY_PROMPT
     assert summary_prompt is not None, "Summary prompt is required"
@@ -58,12 +58,10 @@ async def summarize_conversation(
     try:
         request = Request(
             messages=[
-                Message(
-                    role=Role.system,
+                SystemMessage(
                     content=summary_prompt,
                 ),
-                Message(
-                    role=Role.user,
+                UserMessage(
                     content=f"Summarize the following conversation:\n\n{format_conversation(messages)}",
                 ),
             ],
@@ -74,7 +72,7 @@ async def summarize_conversation(
         response = await client.completion(
             request,
         )
-        return Message(role=Role.assistant, content=response.text)
+        return AssistantMessage(content=response.text)
     except Exception as e:
         print(f"Error during summarization: {e}")
-        return Message(role=Role.assistant, content="")
+        return AssistantMessage(content="")

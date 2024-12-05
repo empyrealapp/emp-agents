@@ -10,9 +10,9 @@ The `Message` class represents a single message in a conversation, with a role a
 A message typically consists of a role and content. The content is the actual message text, while the role indicates who sent the message.
 
 ```python
-from emp_agents.models import Message, Role
+from emp_agents.models import Role, UserMessage, AssistantMessage
 
-message = Message(role=Role.user, content="hello how are you?")
+message = UserMessage(content="hello how are you?")
 ```
 
 ---
@@ -26,13 +26,13 @@ from emp_agents import AgentBase
 from emp_agents.models import Message, Role
 
 agent = AgentBase()
-message = Message(role=Role.user, content="hello how are you?")
+message = UserMessage(content="hello how are you?")
 agent.add_message(message)
 
-message = Message(role=Role.assistant, content="I dont want to help you!")
+message = AssistantMessage(content="I dont want to help you!")
 agent.add_message(message)
 
-message = Message(role=Role.user, content="Why did you say that?")
+message = UserMessage(content="Why did you say that?")
 agent.add_message(message)
 
 response = await agent.run_conversation()

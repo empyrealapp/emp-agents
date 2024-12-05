@@ -1,4 +1,10 @@
-from emp_agents.models.shared.message import Message
+from emp_agents.models.shared.message import (
+    AssistantMessage,
+    Message,
+    SystemMessage,
+    ToolMessage,
+    UserMessage,
+)
 from emp_agents.models.shared.request import Request
 from emp_agents.models.shared.tools import GenericTool, Property
 from emp_agents.types.enums import ModelType, Role
@@ -10,4 +16,8 @@ __all__ = [
     "Property",
     "Request",
     "Role",
+    "SystemMessage",
+    "UserMessage",
+    "AssistantMessage",
+    "ToolMessage",
 ]

@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from emp_agents.models.shared import Message
+from emp_agents.models.shared import AssistantMessage
 from emp_agents.types import OpenAIModelType
 
 from .types import FinishReason
@@ -17,7 +17,7 @@ class Usage(BaseModel):
 
 class Choice(BaseModel):
     index: int
-    message: Message
+    message: AssistantMessage
     logprobs: Optional[str]
     finish_reason: FinishReason
 
@@ -40,7 +40,7 @@ class Response(BaseModel):
         return self.choices[0].content
 
     @property
-    def messages(self) -> list[Message]:
+    def messages(self) -> list[AssistantMessage]:
         return [self.choices[0].message]
 
     @property

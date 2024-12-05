@@ -2,8 +2,7 @@ from typing import TYPE_CHECKING
 
 import tiktoken
 
-from emp_agents.models import OpenAIModelType, Role
-from emp_agents.models.openai import Message
+from emp_agents.models import OpenAIModelType, SystemMessage, UserMessage
 from emp_agents.models.shared import Request
 
 if TYPE_CHECKING:
@@ -28,10 +27,8 @@ async def extract_chunk(client: OpenAIBase, document, template_prompt=template_p
     prompt = template_prompt.replace("<document>", document)
 
     messages = [
-        Message(
-            role=Role.system, content="You help extract information from documents."
-        ),
-        Message(role=Role.user, content=prompt),
+        SystemMessage(content="You help extract information from documents."),
+        UserMessage(content=prompt),
     ]
     response = await client.completion(
         Request(

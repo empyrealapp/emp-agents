@@ -3,7 +3,7 @@ from enum import StrEnum
 
 from pydantic import BaseModel
 
-from emp_agents.models.shared import Message
+from emp_agents.models.shared import AssistantMessage
 from emp_agents.models.shared.message import Function
 from emp_agents.types import AnthropicModelType as ModelType
 from emp_agents.types import Role
@@ -27,8 +27,8 @@ class Content(BaseModel):
         assert self.input is not None
         return Function(name=self.name, arguments=json.dumps(self.input))
 
-    def to_message(self) -> Message:
-        return Message(role=Role.assistant, content=self.text)
+    def to_message(self) -> AssistantMessage:
+        return AssistantMessage(content=self.text)
 
 
 class StopReason(StrEnum):
@@ -62,5 +62,5 @@ class Response(BaseModel):
         return [content for content in self.content if content.type == "tool_use"]
 
     @property
-    def messages(self) -> list[Message]:
+    def messages(self) -> list[AssistantMessage]:
         return [content.to_message() for content in self.content]

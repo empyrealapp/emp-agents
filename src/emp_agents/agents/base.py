@@ -7,7 +7,17 @@ from pydantic import BaseModel, Field, PrivateAttr, computed_field, field_valida
 
 from emp_agents.exceptions import InvalidModelException
 from emp_agents.logger import logger
-from emp_agents.models import AnthropicBase, GenericTool, Message, OpenAIBase, Request
+from emp_agents.models import (
+    AnthropicBase,
+    AssistantMessage,
+    GenericTool,
+    Message,
+    OpenAIBase,
+    Request,
+    SystemMessage,
+    ToolMessage,
+    UserMessage,
+)
 from emp_agents.types import AnthropicModelType, OpenAIModelType, Role
 from emp_agents.utils import count_tokens, execute_tool, summarize_conversation
 
@@ -80,7 +90,7 @@ class AgentBase(BaseModel):
 
         self._tools_map = {tool.name: tool.func for tool in self._tools}
         self.conversation_history = [
-            Message(role=Role.system, content=self.system_prompt)
+            SystemMessage(content=self.system_prompt)
         ] + self.conversation_history
 
         self._load_implicits()
@@ -123,8 +133,8 @@ class AgentBase(BaseModel):
             model = self._default_model
 
         conversation = [
-            Message(role=Role.system, content=self.system_prompt),
-            Message(role=Role.user, content=question),
+            SystemMessage(content=self.system_prompt),
+            UserMessage(content=question),
         ]
         return await self._run_conversation(
             conversation,
@@ -172,7 +182,7 @@ class AgentBase(BaseModel):
             if isinstance(model, OpenAIModelType):
                 conversation += response.messages
             else:
-                conversation += [Message(role=Role.assistant, content=response.text)]
+                conversation += [AssistantMessage(content=response.text)]
 
             if not response.tool_calls:
                 return response.text
@@ -183,15 +193,10 @@ class AgentBase(BaseModel):
                     tool_call.function.name,
                     tool_call.function.arguments,
                 )
-                message = Message(
-                    role=(
-                        Role.user
-                        if isinstance(model, AnthropicModelType)
-                        else Role.tool
-                    ),
+                message = ToolMessage(
                     content=result,
                     tool_call_id=(
-                        tool_call.id if isinstance(model, OpenAIModelType) else None
+                        tool_call.id if tool_call and hasattr(tool_call, "id") else None
                     ),
                 )
                 if hasattr(self, "conversation_history"):
@@ -254,22 +259,21 @@ class AgentBase(BaseModel):
 
     def print_conversation(self) -> None:
         for message in self.conversation_history:
-            if not message.tool_call_id:
-                print(f"{message.role}: {message.content}")
+            print(f"{message.role}: {message.content}")
 
-    def _make_message(self, content: str, role: Role = Role.user):
-        return Message(role=role, content=content)
+    def _make_message(self, content: str, role: Role = Role.user) -> Message:
+        return Message.build(content, role)
 
     async def run(self):
-        conversation = [Message(role=Role.system, content=self.system_prompt)]
+        conversation = [SystemMessage(content=self.system_prompt)]
         while True:
             question = input("You: ")
             if question == "":
                 break
-            conversation += [Message(role=Role.user, content=question)]
+            conversation += [UserMessage(content=question)]
             response = await self.answer(question)
             print(response)
-            conversation += [Message(role=Role.assistant, content=response)]
+            conversation += [AssistantMessage(content=response)]
 
     def _add_tool(self, tool: GenericTool) -> None:
         self._tools.append(tool)

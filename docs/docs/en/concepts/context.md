@@ -44,11 +44,11 @@ See the [Summarizing Conversations](../getting-started/summarize.md) section for
 
 ```python
 from emp_agents import AgentBase
-from emp_agents.models import Message, Role
+from emp_agents.models import Role, UserMessage, AssistantMessage
 
 messages = [
-    Message(role=Role.user, content="Hello, how are you?"),
-    Message(role=Role.assistant, content="I'm doing great, thank you!"),
+    UserMessage(content="Hello, how are you?"),
+    AssistantMessage(content="I'm doing great, thank you!"),
 ]
 
 agent = AgentBase()

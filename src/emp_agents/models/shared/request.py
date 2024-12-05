@@ -2,7 +2,7 @@ from typing import Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from emp_agents.models.shared.message import Message
+from emp_agents.models.shared.message import Message, SystemMessage
 from emp_agents.models.shared.tools import GenericTool
 from emp_agents.types import ModelType, Role
 
@@ -59,7 +59,7 @@ class Request(BaseModel):
         exclude = ["system"]
         result = self.model_dump(exclude_none=True)
         if self.system:
-            messages = [Message(role=Role.system, content=self.system)] + self.messages
+            messages = [SystemMessage(content=self.system)] + self.messages
         else:
             messages = self.messages
 
