@@ -185,14 +185,19 @@ class AgentBase(BaseModel):
                 conversation += [AssistantMessage(content=response.text)]
 
             if not response.tool_calls:
+                self.conversation_history = conversation
                 return response.text
 
-            for tool_call in response.tool_calls:
-                result = await execute_tool(
+            tool_invocation_coros = [
+                execute_tool(
                     self._tools_map,
                     tool_call.function.name,
                     tool_call.function.arguments,
                 )
+                for tool_call in response.tool_calls
+            ]
+            tool_results = await asyncio.gather(*tool_invocation_coros)
+            for result, tool_call in zip(tool_results, response.tool_calls):
                 message = ToolMessage(
                     content=result,
                     tool_call_id=(
@@ -202,6 +207,7 @@ class AgentBase(BaseModel):
                 if hasattr(self, "conversation_history"):
                     logger.info(message)
                 conversation += [message]
+                self.conversation_history = conversation
 
     async def answer(
         self,
