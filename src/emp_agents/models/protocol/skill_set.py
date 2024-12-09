@@ -1,4 +1,4 @@
-from typing import Any, Callable, ClassVar
+from typing import ClassVar
 
 from pydantic import BaseModel, PrivateAttr
 
@@ -7,8 +7,7 @@ from emp_agents.models.protocol.registry import ToolRegistry
 
 
 class SkillSet(BaseModel):
-    tools: ClassVar[list[Callable[..., Any]]] = []
-    _tools_map: ClassVar[dict[str, GenericTool]] = PrivateAttr(default_factory=list)
+    _tools_map: ClassVar[dict[str, GenericTool]] = PrivateAttr(default_factory=dict)
     _tools: ClassVar[list[GenericTool]] = PrivateAttr(default_factory=list)
 
     async def setup(self):
