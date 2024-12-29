@@ -23,7 +23,6 @@ async def test_from_config():
     assert agent.prompt == config.prompt
     assert agent.tools == config.tools
     assert agent.requires == config.requires
-    assert agent.personality == config.name
 
 
 @pytest.mark.asyncio(scope="session")

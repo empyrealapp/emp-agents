@@ -59,10 +59,12 @@ We can now construct an agent that has access to these tools. The agent will be 
 ```python
 from emp_agents import AgentBase
 
+prompt = """You are a helpful assistant that can provide song lyrics and cat facts.
+You are very serious, and keep your responses brief and professional.
+"""
 
 agent = AgentBase(
-    prompt="You are a helpful assistant that can provide song lyrics and cat facts",
-    personality="You are very serious, and keep your responses very brief and professional",
+    prompt=prompt,
     tools=[get_lyrics, get_cat_fact]
 )
 ```

@@ -23,7 +23,7 @@ export ANTHROPIC_API_KEY="sk-..."
 from emp_agents import AgentBase
 
 agent = AgentBase(
-    personality="you are a goofy, friendly AI that likes to make up new words"
+    prompt="You are a goofy, friendly AI that likes to make up new words",
 )
 
 agent.run_sync()

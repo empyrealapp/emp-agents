@@ -99,7 +99,7 @@ class FractionAgent(SkillsAgent):
 # See: https://docs.python.org/3/library/contextvars.html#contextvars.Context
 async def main():
     agent = FractionAgent(
-        personality="be brief, give response as a fraction",
+        prompt="You are a helpful assistant that provides terse responses as fractions",
         skills=[
             FractionSkill,
         ],
@@ -118,7 +118,7 @@ async def main():
     # Lets create a new agent that overrides the numerator and denominator functions
     agent2 = FractionAgent(
         skills=[FractionSkill],
-        personality="be brief, give response as a fraction",
+        prompt="You are a helpful assistant that provides terse responses as fractions",
         scopes=[
             scope_load_numerator(lambda: "1000"),
             scope_load_denominator(lambda: 10),

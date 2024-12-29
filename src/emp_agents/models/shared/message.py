@@ -9,16 +9,15 @@ from pydantic.types import Json
 from emp_agents.types.enums import Role
 
 
-class Function(BaseModel):
-    name: str
-    arguments: Json[Any]
-
-    @field_serializer("arguments")
-    def serialize_dt(self, dt: datetime, _info):
-        return json.dumps(self.arguments)
-
-
 class ToolCall(BaseModel):
+    class Function(BaseModel):
+        name: str
+        arguments: Json[Any]
+
+        @field_serializer("arguments")
+        def serialize_dt(self, dt: datetime, _info):
+            return json.dumps(self.arguments)
+
     id: str
     type: str
     function: Function

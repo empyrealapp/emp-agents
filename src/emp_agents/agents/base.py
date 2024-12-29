@@ -27,7 +27,6 @@ class AgentBase(BaseModel):
     description: str = Field(default="")
     default_model: OpenAIModelType | AnthropicModelType | None = None
     prompt: str = Field(default="You are a helpful assistant")
-    personality: str | None = Field(default=None)
     tools: list[GenericTool] = Field(default_factory=list)
     conversation_history: list[Message] = Field(default_factory=list)
     requires: list[str] = []
@@ -259,8 +258,6 @@ class AgentBase(BaseModel):
     @property
     def system_prompt(self) -> str:
         prompt = self.prompt
-        if self.personality:
-            prompt = f"{prompt}\n\nPERSONALITY: {self.personality}"
         return prompt.strip()
 
     def print_conversation(self) -> None:

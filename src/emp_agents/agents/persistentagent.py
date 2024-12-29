@@ -14,7 +14,6 @@ class PersistentAgent(AgentBase):
             prompt=config.prompt,
             tools=config.tools,
             requires=config.requires,
-            personality=config.name,
             **config.extra,
         )
 

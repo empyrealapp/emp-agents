@@ -3,8 +3,7 @@ from enum import StrEnum
 
 from pydantic import BaseModel
 
-from emp_agents.models.shared import AssistantMessage
-from emp_agents.models.shared.message import Function
+from emp_agents.models.shared import AssistantMessage, ToolCall
 from emp_agents.types import AnthropicModelType as ModelType
 from emp_agents.types import Role
 
@@ -22,10 +21,10 @@ class Content(BaseModel):
     name: str | None = None
 
     @property
-    def function(self) -> Function:
+    def function(self) -> ToolCall.Function:
         assert self.name is not None
         assert self.input is not None
-        return Function(name=self.name, arguments=json.dumps(self.input))
+        return ToolCall.Function(name=self.name, arguments=json.dumps(self.input))
 
     def to_message(self) -> AssistantMessage:
         return AssistantMessage(content=self.text)
