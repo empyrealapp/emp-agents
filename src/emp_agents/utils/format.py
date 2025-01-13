@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 import tiktoken
 
-from emp_agents.types import AnthropicModelType, OpenAIModelType, Role
+from emp_agents.types import AnthropicModelType, OpenAIModelType, ModelType
 
 if TYPE_CHECKING:
     from emp_agents.models import AnthropicBase, Message, OpenAIBase
@@ -46,7 +46,7 @@ def count_tokens(
 async def summarize_conversation(
     client: "OpenAIBase | AnthropicBase",
     messages: list["Message"],
-    model: OpenAIModelType | AnthropicModelType,
+    model: ModelType,
     prompt: str | None = None,
     max_tokens: int = 500,
 ) -> "Message":

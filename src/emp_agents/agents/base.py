@@ -1,7 +1,7 @@
 import asyncio
 import os
 from textwrap import dedent
-from typing import Any, Callable
+from typing import Any, Callable, Awaitable
 
 from pydantic import BaseModel, Field, PrivateAttr, computed_field, field_validator
 
@@ -14,19 +14,20 @@ from emp_agents.models import (
     GenericTool,
     Message,
     OpenAIBase,
+    Middleware,
     Request,
     SystemMessage,
     ToolMessage,
     UserMessage,
 )
-from emp_agents.types import AnthropicModelType, OpenAIModelType, Role
+from emp_agents.types import AnthropicModelType, OpenAIModelType, ModelType, Role
 from emp_agents.utils import count_tokens, execute_tool, summarize_conversation
 
 
 class AgentBase(BaseModel):
     agent_id: str = Field(default="")
     description: str = Field(default="")
-    default_model: OpenAIModelType | AnthropicModelType | None = None
+    default_model: ModelType | None = None
     prompt: str = Field(default="You are a helpful assistant")
     tools: list[GenericTool] = Field(default_factory=list)
     requires: list[str] = []
@@ -39,6 +40,9 @@ class AgentBase(BaseModel):
     conversation: AbstractConversationProvider = Field(
         default_factory=ConversationProvider
     )
+
+    # This can be used to modify the conversation before completion, such as RAG
+    middleware: list[Middleware] = Field(default_factory=list)
 
     _tools: list[GenericTool] = PrivateAttr(default_factory=list)
     _tools_map: dict[str, Callable[..., Any]] = PrivateAttr(default_factory=dict)
@@ -58,7 +62,7 @@ class AgentBase(BaseModel):
             return AnthropicModelType.claude_3_opus
         raise ValueError("No API key found")
 
-    def _load_model(self, model: OpenAIModelType | AnthropicModelType | None):
+    def _load_model(self, model: ModelType | None) -> ModelType:
         if model is None:
             model = self._default_model
         assert model is not None, "Model is required"
@@ -106,7 +110,7 @@ class AgentBase(BaseModel):
 
     async def summarize(
         self,
-        model: OpenAIModelType | AnthropicModelType | None = None,
+        model: ModelType | None = None,
         update: bool = True,
         prompt: str | None = None,
         max_tokens: int = 500,
@@ -154,10 +158,10 @@ class AgentBase(BaseModel):
         response_format: type[BaseModel] | None = None,
     ) -> str:
         """Complete the current conversation until no more tool calls"""
-        model = self._load_model(model)
+        _model = self._load_model(model)
         return await self._run_conversation(
             self.conversation.get_history(),
-            model=model,
+            model=_model,
             max_tokens=max_tokens,
             response_format=response_format,
         )
@@ -172,6 +176,12 @@ class AgentBase(BaseModel):
         """Core conversation loop handling tool calls"""
         client = self._make_client(model)
         conversation = messages.copy()
+        for middleware in self.middleware:
+            _conversation = middleware.function(conversation)
+            if isinstance(_conversation, Awaitable):
+                conversation = await _conversation
+            else:
+                conversation = _conversation
         while True:
             request = Request(
                 messages=conversation,

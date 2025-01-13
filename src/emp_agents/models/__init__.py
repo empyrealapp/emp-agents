@@ -11,6 +11,7 @@ from emp_agents.models.shared import (
     UserMessage,
 )
 from emp_agents.models.shared.tools import GenericTool, Property
+from emp_agents.models.middleware import Middleware
 
 __all__ = [
     "AnthropicBase",
@@ -19,6 +20,7 @@ __all__ = [
     "ModelType",
     "OpenAIBase",
     "Property",
+    "Middleware",
     "Request",
     "Role",
     "SystemMessage",
