@@ -2,10 +2,10 @@ from typing import TYPE_CHECKING
 
 import tiktoken
 
-from emp_agents.types import AnthropicModelType, OpenAIModelType, ModelType
+from emp_agents.types import AnthropicModelType, OpenAIModelType
 
 if TYPE_CHECKING:
-    from emp_agents.models import AnthropicBase, Message, OpenAIBase
+    from emp_agents.models import Message, Provider
 
 DEFAULT_SUMMARY_PROMPT = """
 You are an assistant that summarizes conversations concisely.
@@ -44,9 +44,9 @@ def count_tokens(
 
 
 async def summarize_conversation(
-    client: "OpenAIBase | AnthropicBase",
+    provider: "Provider",
     messages: list["Message"],
-    model: ModelType,
+    model: str,
     prompt: str | None = None,
     max_tokens: int = 500,
 ) -> "Message":
@@ -69,7 +69,7 @@ async def summarize_conversation(
             max_tokens=max_tokens,
             temperature=0.5,
         )
-        response = await client.completion(
+        response = await provider.completion(
             request,
         )
         return AssistantMessage(content=response.text)

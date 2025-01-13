@@ -101,9 +101,9 @@ class GenericTool(BaseModel):
                 type=type_["type"],
                 description=type_["description"],
                 enum=type_.get("enum"),
-                properties=type_.get("properties"),
+                properties=type_.get("properties"),  # type: ignore
                 required=type_.get("required"),
-                items=type_.get("items"),
+                items=type_.get("items"),  # type: ignore
             )
             for name, type_ in schema["parameters"]["properties"].items()
         }

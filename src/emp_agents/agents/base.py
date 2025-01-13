@@ -1,42 +1,35 @@
 import asyncio
-import os
 from textwrap import dedent
 from typing import Any, Callable, Awaitable
 
 from pydantic import BaseModel, Field, PrivateAttr, computed_field, field_validator
 
 from emp_agents.agents.history import AbstractConversationProvider, ConversationProvider
-from emp_agents.exceptions import InvalidModelException
 from emp_agents.logger import logger
 from emp_agents.models import (
-    AnthropicBase,
     AssistantMessage,
     GenericTool,
     Message,
-    OpenAIBase,
     Middleware,
+    Provider,
     Request,
+    ResponseT,
     SystemMessage,
     ToolMessage,
     UserMessage,
 )
-from emp_agents.types import AnthropicModelType, OpenAIModelType, ModelType, Role
+from emp_agents.types import AnthropicModelType, OpenAIModelType, Role
 from emp_agents.utils import count_tokens, execute_tool, summarize_conversation
 
 
 class AgentBase(BaseModel):
     agent_id: str = Field(default="")
     description: str = Field(default="")
-    default_model: ModelType | None = None
+    default_model: str | None = None
     prompt: str = Field(default="You are a helpful assistant")
     tools: list[GenericTool] = Field(default_factory=list)
     requires: list[str] = []
-    openai_api_key: str | None = Field(
-        default_factory=lambda: os.environ.get("OPENAI_API_KEY")
-    )
-    anthropic_api_key: str | None = Field(
-        default_factory=lambda: os.environ.get("ANTHROPIC_API_KEY")
-    )
+    provider: Provider
     conversation: AbstractConversationProvider = Field(
         default_factory=ConversationProvider
     )
@@ -53,21 +46,15 @@ class AgentBase(BaseModel):
 
     @computed_field  # type: ignore[prop-decorator]
     @property
-    def _default_model(self) -> OpenAIModelType | AnthropicModelType:
+    def _default_model(self) -> str:
         if self.default_model:
             return self.default_model
-        if self.openai_api_key:
-            return OpenAIModelType.gpt4o_mini
-        elif self.anthropic_api_key:
-            return AnthropicModelType.claude_3_opus
-        raise ValueError("No API key found")
+        return self.provider.default_model()
 
-    def _load_model(self, model: ModelType | None) -> ModelType:
+    def _load_model(self, model: str | None) -> str:
         if model is None:
             model = self._default_model
         assert model is not None, "Model is required"
-        if not isinstance(model, (OpenAIModelType, AnthropicModelType)):
-            raise InvalidModelException(model)
         return model
 
     @field_validator("prompt", mode="before")
@@ -89,8 +76,8 @@ class AgentBase(BaseModel):
         """Override this method to load implicits to the agent directly"""
 
     def model_post_init(self, _context: Any):
-        if not (self.openai_api_key or self.anthropic_api_key):
-            raise ValueError("Must provide either openai or anthropic api key")
+        if not (self.provider.api_key):
+            raise ValueError("Must provide an api key")
 
         for tool in self.tools:
             if isinstance(tool, GenericTool):
@@ -110,7 +97,7 @@ class AgentBase(BaseModel):
 
     async def summarize(
         self,
-        model: ModelType | None = None,
+        model: str | None = None,
         update: bool = True,
         prompt: str | None = None,
         max_tokens: int = 500,
@@ -118,7 +105,7 @@ class AgentBase(BaseModel):
         model = self._load_model(model)
 
         summary = await summarize_conversation(
-            self._make_client(model),
+            self.provider,
             self.conversation.get_history(),
             model=model,
             prompt=prompt,
@@ -132,7 +119,7 @@ class AgentBase(BaseModel):
     async def respond(
         self,
         question: str,
-        model: OpenAIModelType | AnthropicModelType | None = None,
+        model: str | None = None,
         max_tokens: int | None = None,
         response_format: type[BaseModel] | None = None,
     ) -> str:
@@ -153,7 +140,7 @@ class AgentBase(BaseModel):
 
     async def complete(
         self,
-        model: OpenAIModelType | AnthropicModelType | None = None,
+        model: str | None = None,
         max_tokens: int | None = None,
         response_format: type[BaseModel] | None = None,
     ) -> str:
@@ -169,12 +156,11 @@ class AgentBase(BaseModel):
     async def _run_conversation(
         self,
         messages: list[Message],
-        model: OpenAIModelType | AnthropicModelType,
+        model: str,
         max_tokens: int | None = None,
         response_format: type[BaseModel] | None = None,
     ) -> str:
         """Core conversation loop handling tool calls"""
-        client = self._make_client(model)
         conversation = messages.copy()
         for middleware in self.middleware:
             _conversation = middleware.function(conversation)
@@ -190,12 +176,8 @@ class AgentBase(BaseModel):
                 max_tokens=max_tokens or 1_000,
                 response_format=response_format,
             )
-            response = await client.completion(request)
-
-            if isinstance(model, OpenAIModelType):
-                conversation += response.messages
-            else:
-                conversation += [AssistantMessage(content=response.text)]
+            response: ResponseT = await self.provider.completion(request)
+            conversation += response.messages
 
             if not response.tool_calls:
                 self.conversation.set_history(conversation)
@@ -246,19 +228,6 @@ class AgentBase(BaseModel):
         messages: list[Message],
     ) -> None:
         self.conversation.add_messages(messages)
-
-    def _make_client(
-        self, model: OpenAIModelType | AnthropicModelType | None = None
-    ) -> OpenAIBase | AnthropicBase:
-        model = self._load_model(model)
-        if isinstance(model, OpenAIModelType):
-            if not self.openai_api_key:
-                raise ValueError("OpenAI API key is required")
-            return OpenAIBase(openai_api_key=self.openai_api_key)
-        else:
-            if not self.anthropic_api_key:
-                raise ValueError("Anthropic API key is required")
-            return AnthropicBase(anthropic_api_key=self.anthropic_api_key)
 
     async def __call__(
         self,

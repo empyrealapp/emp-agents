@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from emp_agents.models.shared.message import Message, SystemMessage
 from emp_agents.models.shared.tools import GenericTool
-from emp_agents.types import ModelType, Role
+from emp_agents.types import Role
 
 
 class Request(BaseModel):
@@ -14,7 +14,7 @@ class Request(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True)
 
-    model: ModelType
+    model: str
     max_tokens: Optional[int] = Field(default=1_000, lt=16_384, gt=0)
     temperature: Optional[float] = Field(default=None, ge=0, le=2.0)
     tool_choice: Literal["none", "required", "auto", None] = Field(default=None)
