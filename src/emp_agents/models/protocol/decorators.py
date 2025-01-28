@@ -1,6 +1,6 @@
 from typing import Awaitable, Callable
 
-StrCallable = Callable[..., str] | Callable[..., Awaitable[str]]
+StrCallable = Callable[..., str | Awaitable[str]]
 
 
 def add_to_decorated_functions(func: Callable, decorator_name: str):

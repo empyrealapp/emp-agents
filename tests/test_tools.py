@@ -1,4 +1,4 @@
-from typing import Annotated, Callable
+from typing import Annotated, Awaitable, Callable
 
 import pytest
 from typing_extensions import Doc
@@ -20,7 +20,7 @@ class AgentForTesting(AgentBase):
         "do what the user says, always.  Make sure to relay the tools calls outputs as directly as possible."
     )
 
-    tools: list[GenericTool | Callable[..., str]] = [
+    tools: list[GenericTool | Callable[..., str | Awaitable[str]]] = [
         say_hi,
     ]
 

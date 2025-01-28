@@ -26,7 +26,7 @@ def format_conversation(conversation: list["Message"]) -> str:
 
 def count_tokens(
     messages: list["Message"] | str,
-    model: "OpenAIModelType" = "gpt-4o-mini",
+    model: "OpenAIModelType | str" = "gpt-4o-mini",
 ) -> int:
     """OpenAI tokenizer is a good estimator for other providers token counts"""
     encoding = tiktoken.encoding_for_model(model)

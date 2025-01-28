@@ -25,6 +25,7 @@ from emp_agents.models import (
     ToolMessage,
     UserMessage,
 )
+from emp_agents.providers.openai import OpenAIModelType
 from emp_agents.types import Role
 from emp_agents.utils import count_tokens, execute_tool, summarize_conversation
 
@@ -34,7 +35,9 @@ class AgentBase(BaseModel):
     description: str = Field(default="")
     default_model: str | None = None
     prompt: str = Field(default="You are a helpful assistant")
-    tools: list[GenericTool | Callable[..., str]] = Field(default_factory=list)
+    tools: list[GenericTool | Callable[..., str | Awaitable[str]]] = Field(
+        default_factory=list
+    )
     requires: list[str] = []
     provider: Provider
     conversation: AbstractConversationProvider = Field(
@@ -103,7 +106,7 @@ class AgentBase(BaseModel):
 
     def get_token_count(
         self,
-        model: str = "gpt4o_mini",
+        model: str | OpenAIModelType = "gpt4o_mini",
     ) -> int:
         """A utility to get the token count for openai models, fairly accurate across all providers"""
         return count_tokens(self.conversation.get_history(), model)
