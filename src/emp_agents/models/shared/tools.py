@@ -120,26 +120,6 @@ class GenericTool(BaseModel):
             func=func,
         )
 
-    def to_openai(self):
-        from ..openai.tool import Function, Parameters, Property
-        from ..openai.tool import Tool as Tool
-
-        return Tool(
-            type="function",
-            function=Function(
-                description=self.description,
-                name=self.name,
-                parameters=Parameters(
-                    properties={
-                        key: Property(**param.model_dump(exclude_none=True))
-                        for key, param in self.parameters.items()
-                    },
-                    required=self.required,
-                ),
-            ),
-            strict=True,
-        )
-
     def to_anthropic(self):
         from ..anthropic.tool import Property, Tool, ToolSchema
 

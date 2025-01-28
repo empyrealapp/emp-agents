@@ -1,15 +1,16 @@
 from . import tools
 from .agents import AgentBase
-from .models import AnthropicBase, GenericTool, Message, OpenAIBase, Property, Request
+from .models import GenericTool, Message, Property, Request
 from .types import AnthropicModelType, OpenAIModelType, Role
+from .providers import AnthropicProvider, OpenAIProvider
 
 __all__ = [
     "AgentBase",
-    "AnthropicBase",
+    "AnthropicProvider",
     "AnthropicModelType",
     "GenericTool",
     "Message",
-    "OpenAIBase",
+    "OpenAIProvider",
     "OpenAIModelType",
     "Property",
     "Request",

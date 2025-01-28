@@ -1,10 +1,10 @@
 from abc import abstractmethod
-from typing import Generic, TypeVar
+from typing import TypeVar
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from .shared.request import Request
-from .shared.message import Message, ToolCall
+from .shared import Request, Message, GenericTool, ToolCall
+from ..types import TCompletionAgent
 
 
 class ResponseT(BaseModel):
@@ -26,19 +26,16 @@ class ResponseT(BaseModel):
 Response = TypeVar("Response", bound=ResponseT)
 
 
-class Provider(BaseModel, Generic[Response]):
+class Provider(BaseModel, TCompletionAgent[Response]):
     api_key: str | None = None
+    default_model: str | None = None
 
     def _load_model(self, model: str | None) -> str:
         if model is None:
-            model = self.default_model()
+            model = self.default_model
+        if not model:
+            raise ValueError("No model provided")
         return model
 
     @abstractmethod
-    def default_model(self) -> str: ...
-
-    @abstractmethod
-    async def _run_conversation(self, messages: list[Message]) -> list[Message]: ...
-
-    @abstractmethod
-    async def completion(self, request: Request) -> Response: ...
+    def completion(self, request: Request) -> Response: ...

@@ -49,7 +49,7 @@ class AgentBase(BaseModel):
     def _default_model(self) -> str:
         if self.default_model:
             return self.default_model
-        return self.provider.default_model()
+        return self.provider.default_model
 
     def _load_model(self, model: str | None) -> str:
         if model is None:

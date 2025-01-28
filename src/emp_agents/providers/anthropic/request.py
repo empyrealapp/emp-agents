@@ -4,7 +4,9 @@ from anthropic.types.message_create_params import ToolChoice, ToolChoiceToolChoi
 from pydantic import BaseModel, ConfigDict, Field, PlainSerializer
 
 from emp_agents.models.anthropic.tool import Tool
-from emp_agents.models.shared import AnthropicModelType, Message
+from emp_agents.models.shared import Message
+
+from .types import AnthropicModelType
 
 
 class Request(BaseModel):

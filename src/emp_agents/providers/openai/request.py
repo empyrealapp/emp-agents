@@ -2,10 +2,10 @@ from typing import Annotated, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, PlainSerializer
 
-from emp_agents.models.openai.tool import Tool
 from emp_agents.models.shared import Message
 from emp_agents.models.shared.tools import GenericTool
 from emp_agents.types import OpenAIModelType
+from .tool import Tool
 
 
 class Request(BaseModel):
@@ -45,8 +45,3 @@ class Request(BaseModel):
         return super().model_dump(
             exclude_none=exclude_none, by_alias=by_alias, **kwargs
         )
-
-    def anthropic(self):
-        result = self.model_dump(exclude_none=True)
-        if "tool_choice" in result:
-            result["tool_choice"] = {"type": result["tool_choice"]}

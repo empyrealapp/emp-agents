@@ -4,12 +4,12 @@ from typing import ClassVar
 from anthropic import AsyncAnthropic as Anthropic
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
-from emp_agents.models.anthropic.response import Response
 from emp_agents.models.shared import Request
 from emp_agents.types import TCompletionAgent
+from .response import Response
 
 
-class AnthropicBase(BaseModel, TCompletionAgent[Response]):
+class AnthropicProvider(BaseModel, TCompletionAgent[Response]):
     URL: ClassVar[str] = "https://api.openai.com/v1/chat/completions"
 
     anthropic_api_key: str = Field(
