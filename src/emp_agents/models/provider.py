@@ -1,9 +1,9 @@
 from abc import abstractmethod
 from typing import TypeVar
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-from .shared import Request, Message, GenericTool, ToolCall
+from .shared import Request, Message, ToolCall
 from ..types import TCompletionAgent
 
 
@@ -38,4 +38,4 @@ class Provider(BaseModel, TCompletionAgent[Response]):
         return model
 
     @abstractmethod
-    def completion(self, request: Request) -> Response: ...
+    async def completion(self, request: Request) -> Response: ...

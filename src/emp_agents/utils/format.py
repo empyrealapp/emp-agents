@@ -2,9 +2,8 @@ from typing import TYPE_CHECKING
 
 import tiktoken
 
-from emp_agents.types import AnthropicModelType, OpenAIModelType
-
 if TYPE_CHECKING:
+    from emp_agents.providers.openai.types import OpenAIModelType
     from emp_agents.models import Message, Provider
 
 DEFAULT_SUMMARY_PROMPT = """
@@ -27,8 +26,9 @@ def format_conversation(conversation: list["Message"]) -> str:
 
 def count_tokens(
     messages: list["Message"] | str,
-    model: OpenAIModelType | AnthropicModelType = OpenAIModelType.gpt4o_mini,
+    model: "OpenAIModelType" = "gpt-4o-mini",
 ) -> int:
+    """OpenAI tokenizer is a good estimator for other providers token counts"""
     encoding = tiktoken.encoding_for_model(model)
     tokens = 0
     if isinstance(messages, list):

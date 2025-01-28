@@ -8,13 +8,14 @@ from emp_agents.models import GenericTool, Provider, Request, SystemMessage
 from .request import Message, Tool
 from .response import Response
 from .tool import Function, Parameters, Property
-from .types import Classification
+from .types import Classification, OpenAIModelType
 
 
 class OpenAIProvider(Provider[Response]):
     URL: ClassVar[str] = "https://api.openai.com/v1/chat/completions"
+
     api_key: str = Field(default_factory=lambda: os.environ["OPENAI_API_KEY"])
-    default_model: str = Field(default="gpt-4o-mini")
+    default_model: OpenAIModelType = Field(default=OpenAIModelType.gpt4o_mini)
 
     @property
     def headers(self):
@@ -43,6 +44,8 @@ class OpenAIProvider(Provider[Response]):
                     set_additional_properties_false(item)
 
         if "response_format" in result:
+            assert request.response_format is not None
+
             model_schema = request.response_format.model_json_schema()
             set_additional_properties_false(model_schema)
             del result["response_format"]
@@ -104,6 +107,7 @@ __all__ = [
     "Classification",
     "Message",
     "OpenAIBase",
+    "OpenAIModelType",
     "Request",
     "Response",
     "Tool",

@@ -3,9 +3,8 @@ from typing import Annotated
 from anthropic.types.message_create_params import ToolChoice, ToolChoiceToolChoiceAuto
 from pydantic import BaseModel, ConfigDict, Field, PlainSerializer
 
-from emp_agents.models.anthropic.tool import Tool
-from emp_agents.models.shared import Message
-
+from emp_agents.models import Message
+from .tool import Tool
 from .types import AnthropicModelType
 
 

@@ -3,8 +3,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from emp_agents.models.shared import AssistantMessage
-from emp_agents.types import OpenAIModelType
+from emp_agents.models import AssistantMessage, Message, ResponseT, ToolCall
+from .types import OpenAIModelType
 
 from .types import FinishReason
 
@@ -26,7 +26,7 @@ class Choice(BaseModel):
         return self.message.content
 
 
-class Response(BaseModel):
+class Response(ResponseT):
     id: str
     object: str
     created: datetime
@@ -36,15 +36,15 @@ class Response(BaseModel):
     system_fingerprint: Optional[str]
 
     @property
-    def text(self):
+    def text(self) -> str:
         return self.choices[0].content
 
     @property
-    def messages(self) -> list[AssistantMessage]:
+    def messages(self) -> list[Message]:
         return [self.choices[0].message]
 
     @property
-    def tool_calls(self):
+    def tool_calls(self) -> list[ToolCall] | None:
         return self.choices[0].message.tool_calls
 
     def __repr__(self):

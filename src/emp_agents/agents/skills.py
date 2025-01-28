@@ -5,7 +5,6 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from emp_agents.models import Message
 from emp_agents.models.protocol import SkillSet
-from emp_agents.types import AnthropicModelType, OpenAIModelType
 
 from .base import AgentBase
 
@@ -26,7 +25,7 @@ class SkillsAgent(AgentBase):
     async def _run_conversation(
         self,
         messages: list[Message],
-        model: OpenAIModelType | AnthropicModelType,
+        model: str,
         max_tokens: int | None = None,
         response_format: type[BaseModel] | None = None,
     ) -> str:
@@ -45,7 +44,7 @@ class SkillsAgent(AgentBase):
     async def respond(
         self,
         question: str,
-        model: OpenAIModelType | AnthropicModelType | None = None,
+        model: str | None = None,
         max_tokens: int | None = None,
         response_format: type[BaseModel] | None = None,
     ) -> str:

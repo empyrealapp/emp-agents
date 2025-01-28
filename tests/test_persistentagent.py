@@ -1,6 +1,7 @@
 import pytest
 
 from emp_agents.agents.persistentagent import PersistentAgent, PersistentAgentConfig
+from emp_agents.providers.openai import OpenAIProvider
 
 
 @pytest.mark.asyncio(scope="session")
@@ -14,7 +15,7 @@ async def test_from_config():
         tools=[],
         requires=[],
     )
-    agent = PersistentAgent.from_config(config)
+    agent = PersistentAgent.from_config(config, provider=OpenAIProvider())
 
     assert isinstance(agent, PersistentAgent)
     assert agent.config == config
@@ -36,7 +37,7 @@ async def test_perform_action(capsys):
         tools=[],
         requires=[],
     )
-    agent = PersistentAgent.from_config(config)
+    agent = PersistentAgent.from_config(config, provider=OpenAIProvider())
     agent.perform_action()
 
     captured = capsys.readouterr()

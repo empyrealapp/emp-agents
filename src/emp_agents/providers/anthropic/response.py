@@ -4,8 +4,8 @@ from enum import StrEnum
 from pydantic import BaseModel
 
 from emp_agents.models.shared import AssistantMessage, ToolCall
-from emp_agents.types import AnthropicModelType as ModelType
 from emp_agents.types import Role
+from .types import AnthropicModelType as ModelType
 
 
 class ResponseType(StrEnum):

@@ -2,7 +2,14 @@ import asyncio
 from textwrap import dedent
 from typing import Any, Callable, Awaitable
 
-from pydantic import BaseModel, Field, PrivateAttr, computed_field, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    PrivateAttr,
+    computed_field,
+    field_validator,
+)
 
 from emp_agents.agents.history import AbstractConversationProvider, ConversationProvider
 from emp_agents.logger import logger
@@ -18,7 +25,7 @@ from emp_agents.models import (
     ToolMessage,
     UserMessage,
 )
-from emp_agents.types import AnthropicModelType, OpenAIModelType, Role
+from emp_agents.types import Role
 from emp_agents.utils import count_tokens, execute_tool, summarize_conversation
 
 
@@ -27,7 +34,7 @@ class AgentBase(BaseModel):
     description: str = Field(default="")
     default_model: str | None = None
     prompt: str = Field(default="You are a helpful assistant")
-    tools: list[GenericTool] = Field(default_factory=list)
+    tools: list[GenericTool | Callable[..., str]] = Field(default_factory=list)
     requires: list[str] = []
     provider: Provider
     conversation: AbstractConversationProvider = Field(
@@ -40,6 +47,8 @@ class AgentBase(BaseModel):
     _tools: list[GenericTool] = PrivateAttr(default_factory=list)
     _tools_map: dict[str, Callable[..., Any]] = PrivateAttr(default_factory=dict)
 
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     @property
     def conversation_history(self) -> list[Message]:
         return self.conversation.get_history()
@@ -49,7 +58,9 @@ class AgentBase(BaseModel):
     def _default_model(self) -> str:
         if self.default_model:
             return self.default_model
-        return self.provider.default_model
+        _model = self.provider.default_model
+        assert _model is not None, "Default model is required"
+        return _model
 
     def _load_model(self, model: str | None) -> str:
         if model is None:
@@ -91,8 +102,10 @@ class AgentBase(BaseModel):
         self._load_implicits()
 
     def get_token_count(
-        self, model: OpenAIModelType | AnthropicModelType = OpenAIModelType.gpt4o_mini
+        self,
+        model: str = "gpt4o_mini",
     ) -> int:
+        """A utility to get the token count for openai models, fairly accurate across all providers"""
         return count_tokens(self.conversation.get_history(), model)
 
     async def summarize(
@@ -207,7 +220,7 @@ class AgentBase(BaseModel):
     async def answer(
         self,
         question: str,
-        model: OpenAIModelType | AnthropicModelType | None = None,
+        model: str | None = None,
         response_format: type[BaseModel] | None = None,
     ) -> str:
         self.conversation.add_message(Message(role=Role.user, content=question))
@@ -232,9 +245,9 @@ class AgentBase(BaseModel):
     async def __call__(
         self,
         question: str,
-        model: OpenAIModelType | AnthropicModelType = OpenAIModelType.gpt4o_mini,
+        model: str | None = None,
     ) -> str:
-        return await self.answer(question, model)
+        return await self.answer(question, model=model)
 
     async def reset(self):
         self.conversation.reset()

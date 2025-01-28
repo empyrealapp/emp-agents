@@ -1,14 +1,18 @@
 from emp_agents.agents.base import AgentBase
 from emp_agents.config.agent_config import PersistentAgentConfig
+from emp_agents.models import Provider
 
 
 class PersistentAgent(AgentBase):
     config: PersistentAgentConfig
 
     @classmethod
-    def from_config(cls, config: PersistentAgentConfig) -> "PersistentAgent":
+    def from_config(
+        cls, config: PersistentAgentConfig, provider: Provider
+    ) -> "PersistentAgent":
         return cls(
             config=config,
+            provider=provider,
             description=config.description,
             default_model=config.default_model,
             prompt=config.prompt,

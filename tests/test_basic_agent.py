@@ -1,11 +1,11 @@
-import os
-
 import pytest
 from pydantic import BaseModel
 
 from emp_agents.agents import AgentBase
 from emp_agents.exceptions import InvalidModelException
-from emp_agents.types import AnthropicModelType, OpenAIModelType
+from emp_agents.providers import AnthropicProvider, OpenAIProvider
+from emp_agents.providers.openai.types import OpenAIModelType
+from emp_agents.providers.anthropic.types import AnthropicModelType
 
 
 class AgentForTesting(AgentBase):
@@ -15,27 +15,26 @@ class AgentForTesting(AgentBase):
     )
 
 
-@pytest.mark.asyncio(scope="session")
+@pytest.mark.asyncio(loop_scope="session")
 async def test_basic_agent():
     agent = AgentForTesting(
-        openai_api_key=os.environ.get("OPENAI_API_KEY"),
-        anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY"),
-        default_model=OpenAIModelType.gpt4o_mini,
+        provider=OpenAIProvider(
+            default_model=OpenAIModelType.gpt4o_mini,
+        )
     )
     response = await agent.answer("what is the meaning of life?")
     assert response == "test complete"
 
     response = await agent.answer(
-        "what is the meaning of life?", model=AnthropicModelType.claude_3_opus
+        "what is the meaning of life?", model=OpenAIModelType.gpt4o_mini
     )
     assert response == "test complete"
 
 
-@pytest.mark.asyncio(scope="session")
+@pytest.mark.asyncio(loop_scope="session")
 async def test_basic_agent_no_model():
     agent = AgentForTesting(
-        openai_api_key=os.environ.get("OPENAI_API_KEY"),
-        anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY"),
+        provider=AnthropicProvider(),
     )
     with pytest.raises(InvalidModelException):
         await agent.answer("this should raise an error", model="invalid_model")
@@ -48,12 +47,12 @@ class LifeMeaning(BaseModel):
     excuses: list[str]
 
 
-@pytest.mark.asyncio(scope="session")
+@pytest.mark.asyncio(loop_scope="session")
 async def test_response_format():
     agent = AgentForTesting(
-        openai_api_key=os.environ.get("OPENAI_API_KEY"),
-        anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY"),
-        default_model=OpenAIModelType.gpt4o_mini,
+        provider=AnthropicProvider(
+            default_model=AnthropicModelType.claude_3_5_sonnet,
+        )
     )
     response = await agent.answer(
         "what is the meaning of life?", response_format=LifeMeaning

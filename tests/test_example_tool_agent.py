@@ -12,7 +12,7 @@ async def get_cat_fact() -> str:
     return "cats sleep 70% of their lives"
 
 
-@pytest.mark.asyncio(scope="session")
+@pytest.mark.asyncio(loop_scope="session")
 async def test_tool_agent():
     agent = AgentBase(
         prompt="you provide cat facts.  respond with the exact text from the tool.",

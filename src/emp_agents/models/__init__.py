@@ -1,10 +1,10 @@
 from .shared import (
     AssistantMessage,
     Message,
-    ModelType,
     Request,
     Role,
     SystemMessage,
+    ToolCall,
     ToolMessage,
     UserMessage,
 )
@@ -15,7 +15,6 @@ from .provider import ResponseT, Provider
 __all__ = [
     "GenericTool",
     "Message",
-    "ModelType",
     "Property",
     "Middleware",
     "Provider",
@@ -25,5 +24,6 @@ __all__ = [
     "SystemMessage",
     "UserMessage",
     "AssistantMessage",
+    "ToolCall",
     "ToolMessage",
 ]

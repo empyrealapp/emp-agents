@@ -1,16 +1,13 @@
-import os
-
 import pytest
 
 from emp_agents.agents.planner import Planner, Task, TaskList
-from emp_agents.types import OpenAIModelType
+from emp_agents.providers.openai import OpenAIProvider
 
 
 @pytest.mark.asyncio(scope="session")
 async def test_generate():
     agent = Planner(
-        default_model=OpenAIModelType.gpt4o_mini,
-        openai_api_key=os.environ.get("OPENAI_API_KEY"),
+        provider=OpenAIProvider(),
     )
     subject = "write a blog post"
     task_list = await agent.generate(subject)
