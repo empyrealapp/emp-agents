@@ -12,8 +12,8 @@ from pydantic import (
     field_validator,
 )
 
-from emp_agents.exceptions import ResponseValidationError
 from emp_agents.agents.history import AbstractConversationProvider, ConversationProvider
+from emp_agents.exceptions import ResponseValidationError
 from emp_agents.logger import logger
 from emp_agents.models import (
     AssistantMessage,
