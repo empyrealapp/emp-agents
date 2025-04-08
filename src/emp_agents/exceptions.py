@@ -4,3 +4,7 @@ class TooManyTriesException(BaseException):
 
 class InvalidModelException(BaseException):
     pass
+
+
+class ResponseValidationError(BaseException):
+    pass

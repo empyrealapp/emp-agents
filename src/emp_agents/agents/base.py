@@ -7,11 +7,13 @@ from pydantic import (
     ConfigDict,
     Field,
     PrivateAttr,
+    ValidationError,
     computed_field,
     field_validator,
 )
 
 from emp_agents.agents.history import AbstractConversationProvider, ConversationProvider
+from emp_agents.exceptions import ResponseValidationError
 from emp_agents.logger import logger
 from emp_agents.models import (
     AssistantMessage,
@@ -195,7 +197,12 @@ class AgentBase(BaseModel):
             max_tokens=max_tokens,
             response_format=response_format,
         )
-        return response_format.model_validate_json(response)
+        try:
+            return response_format.model_validate_json(response)
+        except ValidationError as e:
+            raise ResponseValidationError(
+                f"Error validating agent response to {response_format.__name__}: {response}"
+            ) from e
 
     @overload
     async def complete(
