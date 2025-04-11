@@ -6,7 +6,7 @@ from pydantic import Field
 
 from emp_agents.models import GenericTool, Provider, Request, SystemMessage
 
-from .request import Message, Tool
+from .request import Message
 from .response import Response
 from .tool import Function, Parameters, Property
 from .types import Classification, OpenAIModelType
@@ -137,7 +137,6 @@ __all__ = [
     "OpenAIModelType",
     "Request",
     "Response",
-    "Tool",
     "Function",
     "Property",
     "Parameters",

@@ -43,8 +43,8 @@ class Response(ResponseT):
         return [self.choices[0].message]
 
     @property
-    def tool_calls(self) -> list[ToolCall] | None:
-        return self.choices[0].message.tool_calls
+    def tool_calls(self) -> list[ToolCall]:
+        return self.choices[0].message.tool_calls or []
 
     def __repr__(self):
         return f'<Response id="{self.id}">'
