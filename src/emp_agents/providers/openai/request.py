@@ -1,11 +1,10 @@
-from typing import Annotated, Literal, Optional
+from typing import Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, PlainSerializer
+from pydantic import BaseModel, ConfigDict, Field
 
 from emp_agents.models.shared import Message
 from emp_agents.models.shared.tools import GenericTool
 
-from .tool import Tool
 from .types import OpenAIModelType
 
 
@@ -20,17 +19,7 @@ class Request(BaseModel):
     max_tokens: Optional[int] = Field(default=None)
     temperature: Optional[float] = Field(default=None, ge=0, le=2.0)
     tool_choice: Literal["none", "required", "auto", None] = Field(default=None)
-    tools: Annotated[
-        Optional[list[GenericTool]],
-        PlainSerializer(
-            lambda tools_list: (
-                [tool.to_openai() for tool in tools_list]
-                if tools_list is not None
-                else None
-            ),
-            return_type=Optional[list[Tool]],
-        ),
-    ] = Field(default=None)
+    tools: Optional[list[GenericTool]] = Field(default=None)
 
     system: str | None = None
     messages: list[Message] | None = None  # Anthropic Field

@@ -3,7 +3,8 @@ from enum import StrEnum
 
 from pydantic import BaseModel
 
-from emp_agents.models.shared import AssistantMessage, ToolCall
+from emp_agents.models.provider import ResponseT
+from emp_agents.models.shared import AssistantMessage, Message, ToolCall
 from emp_agents.types import Role
 
 from .types import AnthropicModelType as ModelType
@@ -32,10 +33,10 @@ class Content(BaseModel):
 
 
 class StopReason(StrEnum):
-    tool_use: str = "tool_use"
-    end_turn: str = "end_turn"
-    max_tokens: str = "max_tokens"
-    stop_sequence: str = "stop_sequence"
+    tool_use = "tool_use"
+    end_turn = "end_turn"
+    max_tokens = "max_tokens"
+    stop_sequence = "stop_sequence"
 
 
 class Usage(BaseModel):
@@ -43,7 +44,7 @@ class Usage(BaseModel):
     output_tokens: int
 
 
-class Response(BaseModel):
+class Response(ResponseT):
     id: str
     content: list[Content]
     model: ModelType | str
@@ -62,5 +63,5 @@ class Response(BaseModel):
         return [content for content in self.content if content.type == "tool_use"]
 
     @property
-    def messages(self) -> list[AssistantMessage]:
+    def messages(self) -> list[Message]:
         return [content.to_message() for content in self.content]

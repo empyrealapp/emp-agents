@@ -58,8 +58,9 @@ class AnthropicProvider(Provider[Response]):
         system_messages = [
             message for message in request.messages if message.role == Role.system
         ]
+
         result["system"] = result.get("system", "") + str(
-            "\n".join([m.content for m in system_messages])
+            "\n".join([m.content for m in system_messages if m.content])
         )
         result["messages"] = [m.model_dump(exclude_none=True) for m in messages]
 
